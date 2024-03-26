@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Form</title>
+</head>
+<body>
+    <h2>Enter Input Values</h2>
+    <div id="inputs">
+        <!-- Input fields will be appended here -->
+    </div>
+    <button onclick="predict()">Predict</button>
+    <p id="prediction"></p> <!-- Placeholder for displaying prediction -->
+
+    <script>
+        function predict() {
+            // Collect input values
+            var inputValues = {};
+            for (var i = 1; i <= 13; i++) {
+                inputValues["input_" + i] = parseFloat(document.getElementById("input_" + i).value);
+            }
+
+            // Send JSON data to backend
+            fetch('/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(inputValues)
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display prediction
+                document.getElementById("prediction").innerText = "The predicted outcome is: " + data.prediction;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        // Dynamically create input fields
+        var inputsDiv = document.getElementById("inputs");
+        for (var i = 1; i <= 13; i++) {
+            var input = document.createElement("input");
+            input.type = "number";
+            input.id = "input_" + i;
+            input.placeholder = "Input " + i;
+            inputsDiv.appendChild(input);
+            inputsDiv.appendChild(document.createElement("br"));
+        }
+    </script>
+</body>
+</html>
